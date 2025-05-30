@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Chain G 서약서</title>
+    <style>
+        /* 기본 스타일 및 한글 폰트 설정 */
+        @font-face {
+            font-family: 'Noto Sans KR'; /* 사용할 폰트 이름 */
+            src: url('/fonts/NotoSansKR-Regular.otf') format('opentype'); /* 실제 폰트 파일 경로 */
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            font-family: 'Noto Sans KR', sans-serif; /* 기본 폰트 지정 */
+            font-size: 10pt;
+            line-height: 1.6;
+            margin: 30px; /* 페이지 여백 */
+        }
+        .header-note {
+            font-size: 8pt;
+            color: #555;
+        }
+        .main-title {
+            font-size: 24pt;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        .pledge-id {
+            font-size: 10pt;
+            margin-bottom: 15px;
+        }
+        .approval-text {
+            font-size: 9pt;
+            color: #333;
+            margin-bottom: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        .section {
+            margin-bottom: 25px;
+            overflow: hidden; /* Clear floats */
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 11pt;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        .left-section {
+            float: left;
+            width: 50%;
+        }
+        .right-section {
+            float: right;
+            width: 50%;
+            padding-left: 20px; /* 섹션 간 간격 */
+            box-sizing: border-box;
+        }
+        .data-label {
+            display: inline-block;
+            width: 80px; /* 레이블 너비 고정 */
+            color: #555;
+        }
+        .data-value {
+            font-weight: normal;
+        }
+        table.payment-info {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table.payment-info th, table.payment-info td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            font-size: 9pt;
+        }
+        table.payment-info th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        table.payment-info .name-col { text-align: left; }
+        table.payment-info .ratio-col { width: 30%; }
+        table.payment-info .amount-col { width: 40%; text-align: right; }
+        .total-row td {
+            font-weight: bold;
+            background-color: #f9f9f9;
+        }
+        .footer {
+            position: fixed; /* 페이지 하단 고정 */
+            bottom: 10px;
+            right: 30px;
+            font-size: 10pt;
+            font-weight: bold;
+        }
+        .page-number {
+             position: fixed; /* 페이지 하단 고정 */
+             bottom: 10px;
+             left: 50%;
+             transform: translateX(-50%);
+             font-size: 9pt;
+        }
+
+        /* Flying Saucer 페이징 지원 */
+        @page {
+             @bottom-center {
+                 content: "- " counter(page) " -";
+                 font-size: 9pt;
+             }
+         }
+
+    </style>
+</head>
+<body>
+    <div class="header-note">블록 체인 기반</div>
+    <div class="main-title">chain G 서약서</div>
+    <div class="pledge-id">서약서 ID : <span th:text="${pledge.pledgeId}">123456789</span></div>
+    <div class="approval-text">해당 서약서는 모든 사람의 승인 하에 생성된 서약서 입니다.</div>
+
+    <div class="section">
+        <div class="left-section">
+            <div class="section-title">서약 기간</div>
+            <div><span class="data-label">시작일 :</span> <span class="data-value" th:text="${pledge.startDate}">2025년 5월 1일</span></div>
+            <div><span class="data-label">종료일 :</span> <span class="data-value" th:text="${pledge.endDate}">2026년 4월 30일</span></div>
+        </div>
+        <div class="right-section">
+            <div class="section-title">월세</div>
+            <div><span class="data-label">월세 총액 :</span> <span class="data-value" th:text="${pledge.totalRentAmount}">1,000,000 원</span></div>
+            <div><span class="data-label">월세 지불 일 :</span> <span class="data-value" th:text="${pledge.rentPaymentDay}">매달 1일</span></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">월세 지불 정보</div>
+        <table class="payment-info">
+            <thead>
+                <tr>
+                    <th class="name-col"></th>
+                    <th class="ratio-col">분배 비율 (%)</th>
+                    <th class="amount-col">지불액 (원)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="payer : ${pledge.rentPayerInfos}">
+                    <td class="name-col" th:text="${payer.name}">김철수</td>
+                    <td th:text="${payer.distributionRatio}">6</td>
+                    <td class="amount-col" th:text="${payer.paymentAmount}">600,000 원</td>
+                </tr>
+                <tr class="total-row">
+                    <td class="name-col">총</td>
+                    <td th:text="${pledge.totalDistributionRatio}">10</td>
+                    <td class="amount-col" th:text="${pledge.totalPaymentAmount}">1,000,000 원</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+         <div class="left-section">
+            <div class="section-title">계좌</div>
+            <div><span class="data-label">월세 지출 계좌 :</span> <span class="data-value" th:text="${pledge.rentExpenseAccount}">싸피 123-456-789</span></div>
+            <div><span class="data-label">월세 지급 계좌 :</span> <span class="data-value" th:text="${pledge.rentPaymentAccount}">싸피 123-456-789</span></div>
+        </div>
+        <div class="right-section">
+             <div class="section-title">공과금</div>
+             <div><span class="data-label">분배 비율 (%) :</span> <span class="data-value" th:text="${pledge.utilityBillRatio}">3</span></div>
+             <div><span class="data-label">공과금 카드 id :</span> <span class="data-value" th:text="${pledge.utilityBillCardId}">3</span></div>
+        </div>
+    </div>
+
+    <div class="footer">Chain G</div>
+    </body>
+</html>

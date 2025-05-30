@@ -1,0 +1,60 @@
+spring:
+  cloud:
+    aws:
+      region:
+        static: ${AWS_REGION}
+      credentials:
+        access-key: ${AWS_ACCESS_KEY_ID}
+        secret-key: ${AWS_SECRET_ACCESS_KEY}
+  config:
+    import:
+    - aws-parameterstore:/togetherBuy/common/
+    - classpath:application-security-deploy.yml
+
+#  kafka:
+#    bootstrap-servers: ${kafka.location}
+#
+#    producer:
+#      retries: 5  # 메시지 전송 실패 시 최대 5회 재시도
+#      acks: all  # 모든 리플리카가 저장한 후 응답
+#      properties:
+#        linger.ms: 5  # 배치 최적화 (5ms 대기 후 전송)
+#        batch.size: 16384  # 배치 크기 (16KB)
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+#
+#    consumer:
+#      group-id: my-kafka-group
+#      enable-auto-commit: false  # 자동 커밋 비활성화 (수동 커밋 사용)
+#      auto-offset-reset: earliest  # 처음부터 메시지 소비
+#      properties:
+#        isolation.level: read_committed  # 트랜잭션 완료된 데이터만 소비
+#        max.poll.records: 500  # 한 번에 가져오는 메시지 수
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+  application:
+    name: TogetherBuyBilling
+  datasource:
+    url: ${db.url}
+    username: ${db.username}
+    password: ${db.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+server:
+  port: 8080
+logging:
+  level:
+    com.amazonaws: DEBUG
+    io.awspring.cloud: DEBUG
+    org.springframework.cloud.aws: DEBUG
+    org.springframework.boot: INFO
+    org.springframework: INFO
+
+cloud:
+  aws:
+    bucket-name: togetherbuy

@@ -1,0 +1,38 @@
+spring:
+  cloud:
+    aws:
+      region:
+        static: ${AWS_REGION}
+      credentials:
+        access-key: ${AWS_ACCESS_KEY_ID}
+        secret-key: ${AWS_SECRET_ACCESS_KEY}
+  config:
+    import:
+      - aws-parameterstore:/togetherBuy/common/
+      - classpath:application-security-deploy.yml
+  application:
+    name: TogetherBuyChat
+  datasource:
+    url: ${db.url}
+    username: ${db.username}
+    password: ${db.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+server:
+  port: 8080
+logging:
+  level:
+    com.amazonaws: DEBUG
+    io.awspring.cloud: DEBUG
+    org.springframework.cloud.aws: DEBUG
+    org.springframework.boot: INFO
+    org.springframework: INFO
+
+
+cloud:
+  aws:
+    bucket-name: togetherbuy

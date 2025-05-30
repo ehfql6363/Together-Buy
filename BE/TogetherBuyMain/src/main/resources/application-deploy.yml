@@ -1,0 +1,71 @@
+spring:
+  cloud:
+    aws:
+      region:
+        static: ${AWS_REGION}
+      credentials:
+        access-key: ${AWS_ACCESS_KEY_ID}
+        secret-key: ${AWS_SECRET_ACCESS_KEY}
+  config:
+    import:
+      - aws-parameterstore:/togetherBuy/common/
+      - classpath:application-security-deploy.yml
+  #  kafka:
+  #    bootstrap-servers: ${kafka.location}  # EC2의 Kafka 브로커 주소
+  #    producer:
+  #      retries: 5  # 메시지 전송 실패 시 최대 5회 재시도
+  #      acks: all  # 모든 리플리카가 저장한 후 응답
+  #      properties:
+  #        linger.ms: 5  # 배치 최적화 (5ms 대기 후 전송)
+  #        batch.size: 16384  # 배치 크기 (16KB)
+  #      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+  #      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+  application:
+    name: TogetherBuyMain
+
+  datasource:
+    url: ${db.url}
+    username: ${db.username}
+    password: ${db.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${google.mailID}
+    password: ${google.mailPW}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      mail.smtp.connectiontimeout: 5000
+      mail.smtp.timeout: 5000
+      mail.smtp.writetimeout: 5000
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+server:
+  port: 8080
+logging:
+  level:
+    com.amazonaws: DEBUG
+    io.awspring.cloud: DEBUG
+    org.springframework.cloud.aws: DEBUG
+    org.springframework.boot: INFO
+    org.springframework: INFO
+    org.springframework.security.oauth2: DEBUG
+
+cloud:
+  aws:
+    bucket-name: togetherbuy
+
+baseUrl: https://togethrebuy.com
